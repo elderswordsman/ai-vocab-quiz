@@ -14,6 +14,14 @@ let availableIndices = reviewMode
   ? reviewWords.map(word => wordList.findIndex(w => w === word))
   : wordList.map((_, i) => i).filter(i => !correctWords.includes(wordList[i]));
 
+function saveMissedWord(word) {
+  const missed = JSON.parse(localStorage.getItem("missedWords")) || [];
+  if (!missed.includes(word)) {
+    missed.push(word);
+    localStorage.setItem("missedWords", JSON.stringify(missed));
+  }
+}
+
 function getRandomIndex() {
   if (availableIndices.length === 0) return null;
   const randomIdx = Math.floor(Math.random() * availableIndices.length);
@@ -67,23 +75,28 @@ function handleSubmission() {
         document.getElementById("next").onclick = () => {
           guessCount = 0;
           currentIndex = getRandomIndex();
-          if (currentIndex === null) {
-            document.getElementById("root").innerHTML = "<p class='text-center mt-8'>You've completed all words!</p>";
-          } else {
+          if (currentIndex !== null) {
             currentWord = wordList[currentIndex];
-            renderApp();
+            document.getElementById("guess").value = "";
+            document.getElementById("feedback").textContent = "";
+            document.getElementById("submit").style.display = "inline-block";
+            document.getElementById("skip").style.display = "inline-block";
+            document.getElementById("nextContainer").innerHTML = "";
+            updateWordPrompt(); // Make sure this exists
+          } else {
+            document.getElementById("wordPrompt").textContent = "🎉 All done!";
+            document.getElementById("controls").style.display = "none";
           }
         };
       } else {
-        if (!missedWords.includes(currentWord)) missedWords.push(currentWord);
-        sessionStorage.setItem("missedWords", JSON.stringify(missedWords));
+        saveMissedWord(currentWord); // ✅ Store missed word
       }
     })
     .catch(err => {
       console.error("❌ Submission error:", err);
-      document.getElementById("feedback").textContent = "There was a problem submitting your guess.";
     });
 }
+
 
 function renderApp() {
   const root = document.getElementById("root");
