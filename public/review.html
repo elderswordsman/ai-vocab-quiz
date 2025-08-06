@@ -4,11 +4,26 @@
     <meta charset="UTF-8" />
     <title>Review Missed Words</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" />
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script defer src="review.js"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   </head>
-  <body>
-    <div id="root"></div>
+  <body class="p-4 font-sans">
+    <h1 class="text-2xl font-bold mb-4">Review Missed Words test</h1>
+
+    <div class="mb-4">
+      <button onclick="showListView()" class="bg-gray-600 text-white px-3 py-2 rounded mr-2 hover:bg-gray-700">
+        📋 Word List View test
+      </button>
+      <button onclick="showQuizView()" class="bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700">
+        🧠 Quiz Me on Missed Words
+      </button>
+    </div>
+
+    <div id="missed-list"></div>
+    <div id="quiz-root" style="display: none;"></div>
+
+    <script type="text/babel" src="review-quiz.js" defer></script>
+    <script src="review-list.js" defer></script>
   </body>
 </html>

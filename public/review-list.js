@@ -1,12 +1,11 @@
-// File: review.js (Missed Word Review Route with CSV export, full reset, and guess tracking)
-
 const ReviewMissedWords = () => {
   const [missed, setMissed] = React.useState([]);
   const [missedWithGuesses, setMissedWithGuesses] = React.useState({});
 
   React.useEffect(() => {
-    const stored = window.sessionStorage.getItem("missedWords");
-    const guessLog = window.sessionStorage.getItem("missedGuessLog");
+    // Try sessionStorage, then fallback to localStorage
+    const stored = window.sessionStorage.getItem("missedWords") || localStorage.getItem("missedWords");
+    const guessLog = window.sessionStorage.getItem("missedGuessLog") || localStorage.getItem("missedGuessLog");
     if (stored) setMissed(JSON.parse(stored));
     if (guessLog) setMissedWithGuesses(JSON.parse(guessLog));
   }, []);
@@ -56,21 +55,31 @@ const ReviewMissedWords = () => {
     URL.revokeObjectURL(url);
   };
 
+  // List items: show empty state if none
+  const listItems = missed.length === 0
+    ? [React.createElement("li", { key: "empty", className: "text-gray-500" }, "No missed words!")]
+    : missed.map((word, idx) =>
+        React.createElement("li", {
+          key: word + idx,
+          className: "text-blue-600 cursor-pointer hover:underline",
+          onClick: () => handleClickWord(word)
+        }, word)
+      );
+
+  // Only show quiz button if there are missed words
+  const quizButton = missed.length > 0
+    ? React.createElement("button", {
+        className: "bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700",
+        onClick: startReviewSession
+      }, "Quiz Me on All Missed Words")
+    : null;
+
   return React.createElement("div", { className: "p-8 max-w-xl mx-auto font-sans" }, [
     React.createElement("h1", { className: "text-2xl font-bold mb-4" }, "Review Missed Words"),
     React.createElement("p", { className: "mb-4" }, "Click a word to try it now, or review the full list below."),
-    React.createElement("ul", { className: "mb-6 list-disc list-inside" },
-      missed.map(word => React.createElement("li", {
-        key: word,
-        className: "text-blue-600 cursor-pointer hover:underline",
-        onClick: () => handleClickWord(word)
-      }, word))
-    ),
+    React.createElement("ul", { className: "mb-6 list-disc list-inside" }, listItems),
     React.createElement("div", { className: "flex flex-wrap gap-4" }, [
-      React.createElement("button", {
-        className: "bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700",
-        onClick: startReviewSession
-      }, "Quiz Me on All Missed Words"),
+      quizButton,
       React.createElement("button", {
         className: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700",
         onClick: handleNextNewWord
@@ -87,4 +96,10 @@ const ReviewMissedWords = () => {
   ]);
 };
 
-ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(ReviewMissedWords));
+// Use React 18 createRoot API, safely
+const container = document.getElementById("missed-list");
+if (container && ReactDOM.createRoot) {
+  ReactDOM.createRoot(container).render(
+    React.createElement(ReviewMissedWords)
+  );
+}

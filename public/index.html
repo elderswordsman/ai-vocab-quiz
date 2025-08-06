@@ -1,16 +1,36 @@
-<!-- File: public/index.html -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Adrian's AI Vocab Quizzer</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css">
-  </head>
-  <body>
-    <div id="root"></div>
+<head>
+  <meta charset="UTF-8" />
+  <title>Vocab Quiz</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css">
+</head>
+<body class="p-4 font-sans">
+  <h1 class="text-2xl font-bold mb-4">AI Vocab Quiz</h1>
 
-    <!-- Load word list before main logic -->
-    <script src="words.js"></script>
-    <script defer src="main.js"></script>
-  </body>
+  <div id="quiz-box" class="max-w-xl mx-auto">
+    <div class="mb-4">
+      <p class="text-lg font-semibold">Define: <span id="wordPrompt" class="text-blue-600"></span></p>
+    </div>
+
+    <input id="guess" type="text" class="border px-2 py-1 w-full mb-2" placeholder="Type your definition" />
+
+    <div class="flex gap-2 mb-4">
+      <button id="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Submit</button>
+      <button id="next" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Next Word</button>
+    </div>
+
+    <div id="feedback" class="text-sm text-gray-700"></div>
+    <div style="text-align: center; margin-top: 2em;">
+      <a href="review.html" id="missed-words-link"
+        style="padding: 10px 24px; background: #28a745; color: #fff; border-radius: 6px; font-size: 1.1em; text-decoration: none;">
+        Review Missed Words
+      </a>
+    </div>
+
+  </div>
+
+  <script src="words.js"></script>
+  <script src="main.js"></script>
+</body>
 </html>
